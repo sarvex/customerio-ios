@@ -77,6 +77,10 @@ extension MessagingPushImplementation {
                 """)
             logger.debug("push content: \(richPushContent)")
 
+            if let deepLink = richPushContent.deepLink {
+                sdkSetupChecklist.completedDeepLinkStep(.pushPayloadContainsDeepLinkURL, deepLink: deepLink)
+            }
+
             RichPushRequestHandler.shared.startRequest(
                 request,
                 content: richPushContent,

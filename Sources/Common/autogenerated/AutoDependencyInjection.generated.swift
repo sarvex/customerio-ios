@@ -1,4 +1,4 @@
-// Generated using Sourcery 1.9.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 1.9.2 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 // swiftlint:disable all
 
@@ -110,6 +110,9 @@ extension DIGraph {
         countDependenciesResolved += 1
 
         _ = lockManager
+        countDependenciesResolved += 1
+
+        _ = sDKSetupChecklist
         countDependenciesResolved += 1
 
         _ = dateUtil
@@ -464,6 +467,18 @@ extension DIGraph {
 
     private func _get_lockManager() -> LockManager {
         LockManager()
+    }
+
+    // SDKSetupChecklist
+    public var sDKSetupChecklist: SDKSetupChecklist {
+        if let overridenDep = overrides[String(describing: SDKSetupChecklist.self)] {
+            return overridenDep as! SDKSetupChecklist
+        }
+        return newSDKSetupChecklist
+    }
+
+    private var newSDKSetupChecklist: SDKSetupChecklist {
+        SDKSetupChecklistImpl(logger: logger)
     }
 
     // DateUtil

@@ -64,8 +64,10 @@ extension MessagingPushImplementation {
 
         switch response.actionIdentifier {
         case UNNotificationDefaultActionIdentifier: // push notification was touched.
-            if let deepLinkurl = pushContent.deepLink {
-                UIApplication.shared.open(url: deepLinkurl)
+            if let deepLink = pushContent.deepLink {
+                UIApplication.shared.open(url: deepLink)
+
+                sdkSetupChecklist.completedDeepLinkStep(.osOpenDeepLinkURL, deepLink: deepLink)
             }
         default: break
         }
@@ -99,6 +101,10 @@ extension MessagingPushImplementation {
         else {
             // push does not contain a CIO rich payload, so end early
             return nil
+        }
+
+        if let deepLink = pushContent.deepLink {
+            sdkSetupChecklist.completedDeepLinkStep(.pushOpened, deepLink: deepLink)
         }
 
         cleanupAfterPushInteractedWith(pushContent: pushContent)

@@ -15,6 +15,9 @@ public protocol Logger: AutoMockable {
     /// the SDK is in an unstable state that you want to notify
     /// the customer or our development team about.
     func error(_ message: String)
+    /// Log message, ignoring the level currently set.
+    // TODO: I am not the biggest fan of adding a new entry to Logger. This is temp for testing this concept.
+    func force(_ message: String)
 }
 
 /// none - no logs will be made
@@ -65,8 +68,6 @@ public class ConsoleLogger: Logger {
     // Unified logging for Swift. https://www.avanderlee.com/workflow/oslog-unified-logging/
     // This means we can view logs in xcode console + Console app.
     private func printMessage(_ message: String, _ level: OSLogType) {
-        if !minLogLevel.shouldLog(level) { return }
-
         let messageToPrint = "(siteid:\(siteId.abbreviatedSiteId)) \(message)"
 
         if #available(iOS 14, *) {
@@ -78,15 +79,25 @@ public class ConsoleLogger: Logger {
         }
     }
 
+    public func force(_ message: String) {
+        printMessage(message, .info)
+    }
+
     public func debug(_ message: String) {
+        if !minLogLevel.shouldLog(.debug) { return }
+
         printMessage(message, .debug)
     }
 
     public func info(_ message: String) {
+        if !minLogLevel.shouldLog(.info) { return }
+
         printMessage("ℹ️ \(message)", .info)
     }
 
     public func error(_ message: String) {
+        if !minLogLevel.shouldLog(.error) { return }
+
         printMessage("🛑 \(message)", .error)
     }
     #else

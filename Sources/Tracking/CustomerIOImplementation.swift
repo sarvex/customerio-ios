@@ -307,6 +307,14 @@ internal class CustomerIOImplementation: CustomerIOInstance {
         event: Metric,
         deviceToken: String
     ) {
+        guard !deliveryID.isEmpty, !deviceToken.isEmpty else {
+            logger
+                .debug(
+                    "ignoring request to track push metric. delivery ID (\(deliveryID)) or device token (\(deviceToken)) is empty."
+                )
+            return
+        }
+
         logger.info("push metric \(event.rawValue)")
 
         logger.debug("delivery id \(deliveryID) device token \(deviceToken)")

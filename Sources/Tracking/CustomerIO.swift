@@ -220,6 +220,7 @@ public class CustomerIO: CustomerIOInstance {
         let hooks = diGraph.hooksManager
         let threadUtil = diGraph.threadUtil
         let logger = diGraph.logger
+        let sdkSetupChecklist = diGraph.sDKSetupChecklist
 
         cleanupRepository = diGraph.cleanupRepository
 
@@ -236,6 +237,8 @@ public class CustomerIO: CustomerIOInstance {
             .info(
                 "Customer.io SDK \(SdkVersion.version) initialized and ready to use for site id: \(siteId)"
             )
+
+        sdkSetupChecklist.noStepsCompleteDeepLinks()
     }
 
     /**
