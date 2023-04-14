@@ -2,19 +2,18 @@
 # name found by running: `xcrun xcodebuild -list` (or, see output of workflow run)
 scheme("Customer.io-Package")
 
-# -destination for xcodebuild
-# chosen to be a simulator that *all* xcode versions include. Help: https://github.com/actions/virtual-environments/blob/main/images/macos/macos-11-Readme.md#installed-simulators
+# required to run tests for a SPM module 
 devices([
-  "iPhone 8"
+  "iOS Simulator"
 ])
 
 output_types("html,junit")
 output_files("test-report.html,test-report.xml")
-output_directory(".")
+output_directory(".") # where reports are stored 
+derived_data_path("/tmp/cio-sdk-tests/derivedData") # required for code coverage generation script to find the xcresult directory
 
 code_coverage(true)
 result_bundle(true) # required to get code coverage report 
-derived_data_path(".build/derivedData")
 
 skip_build(true) # speed up testing 
 

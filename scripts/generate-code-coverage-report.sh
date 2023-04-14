@@ -20,6 +20,7 @@
 set -e
 
 OUTPUT_DIR=".build" # where swift package manager puts data. re-use that. 
+mkdir -p "$OUTPUT_DIR" # make sure that the directory exists 
 
 # Install some tools that we need 
 # mint allows us to execute a swift package manager executable
@@ -29,7 +30,7 @@ brew install mint jq
 # We generate a json file with all the code coverage content in it. 
 XCODE_CODE_COV_REPORT="$OUTPUT_DIR/code-coverage.json"
 echo "Parsing .xcresult/ for code coverage to $XCODE_CODE_COV_REPORT"
-xcrun xccov view --report *.xcresult --json > "$XCODE_CODE_COV_REPORT"
+xcrun xccov view --report /tmp/cio-sdk-tests/**/*.xcresult --json > "$XCODE_CODE_COV_REPORT"
 
 # We have now generated a human-readable file with code coverage information in it. However, CodeCov.io does not 
 # understand the format that we generated with xccov. We need to convert that file into a different format. 
