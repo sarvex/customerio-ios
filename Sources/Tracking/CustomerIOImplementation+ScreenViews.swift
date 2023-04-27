@@ -103,23 +103,18 @@ internal extension UIViewController {
      - returns: If window is not found then this function returns nil else returns the root view controller
      */
     private func getActiveRootViewController() -> UIViewController? {
-        if let viewController = UIApplication.shared.delegate?.window??.rootViewController {
-            return viewController
-        } else if #available(iOS 13.0, *) {
-            for scene in UIApplication.shared.connectedScenes {
-                if scene.activationState == .foregroundActive, let windowScene = scene as? UIWindowScene {
-                    if let sceneDelegate = windowScene.delegate as? UIWindowSceneDelegate {
-                        if let sceneWindow = sceneDelegate.window {
-                            return sceneWindow?.rootViewController
-                        }
-                    }
-                }
-            }
-        } else { // keyWindow is deprecated in iOS 13.0*
-            return UIApplication.shared.keyWindow?.rootViewController
+        func getRootViewController(fromKeyWindow keyWindow: UIWindow?) -> UIViewController? {
+            keyWindow?.rootViewController
+        }
+        func getRootViewController(fromWindows windows: [UIWindow]) -> UIViewController? {
+            getRootViewController(fromKeyWindow: windows.first { $0.isKeyWindow })
         }
 
-        return nil
+        // Because of Apple code deprecations, we prioritize attempts at getting the root ViewController.
+        // Function calls below are prioritized with the most currently recommended way first.
+        return getRootViewController(fromWindows: UIApplication.shared.connectedScenes.flatMap { ($0 as? UIWindowScene)?.windows ?? [] }) ??
+            getRootViewController(fromWindows: UIApplication.shared.windows) ??
+            getRootViewController(fromKeyWindow: UIApplication.shared.keyWindow)
     }
 }
 
